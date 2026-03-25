@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { SchedaCCA, FaseSapori, Intensita } from '@/lib/types';
 import { SCHEDA_INIZIALE } from '@/lib/schema';
 
@@ -77,28 +78,33 @@ export default function SchedaForm() {
     }));
   }
 
-  async function scaricaPDF() {
+  function scaricaPDF() {
+    // Form submit nativo: sincrono, nessun blob URL, funziona su iOS Safari.
+    // Il browser apre direttamente la risposta PDF (viewer nativo su mobile,
+    // download su desktop). Nessun problema di "user gesture chain".
     setScaricando(true);
-    try {
-      const res = await fetch('/api/genera-pdf', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(scheda),
-      });
-      if (!res.ok) throw new Error('Errore nella generazione del PDF');
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `scheda-cca-${scheda.datiGenerali.data}.pdf`;
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error(err);
-      alert('Errore nella generazione del PDF');
-    } finally {
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/api/genera-pdf';
+    // Nessun target: il browser riceve Content-Disposition:attachment
+    // e scarica il file senza navigare via dalla pagina.
+    // target="_blank" verrebbe bloccato dai popup blocker di tutti i browser.
+
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'scheda';
+    input.value = JSON.stringify(scheda);
+    form.appendChild(input);
+
+    document.body.appendChild(form);
+    form.submit();
+
+    // Il form va rimosso dopo l'invio, non subito (il browser potrebbe ancora referenziarlo)
+    setTimeout(() => {
+      document.body.removeChild(form);
       setScaricando(false);
-    }
+    }, 2000);
   }
 
   return (
@@ -110,15 +116,18 @@ export default function SchedaForm() {
 
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-12">
         {/* Header principale */}
-        <div className="text-center space-y-2 py-6">
-          <h1
-            className="text-3xl md:text-4xl text-gold tracking-widest uppercase"
-            style={{ fontFamily: 'var(--font-display)' }}
-          >
+        <div className="text-center py-6">
+          <Image
+            src="/logoCivithabana.png"
+            alt="CivitHabana Cigar Club"
+            width={320}
+            height={128}
+            className="mx-auto"
+            style={{ objectFit: 'contain' }}
+            priority
+          />
+          <p className="text-gold tracking-widest text-xs mt-3 uppercase" style={{ fontFamily: 'var(--font-mono)' }}>
             Scheda di Degustazione
-          </h1>
-          <p className="text-text-dim tracking-widest text-sm" style={{ fontFamily: 'var(--font-mono)' }}>
-            Cigar Club Association — CCA
           </p>
         </div>
 

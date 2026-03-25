@@ -3,7 +3,17 @@ import { generaPDF } from '@/lib/generatePdf';
 import { SchedaCCA } from '@/lib/types';
 
 export async function POST(req: NextRequest) {
-  const scheda: SchedaCCA = await req.json();
+  let scheda: SchedaCCA;
+
+  const contentType = req.headers.get('content-type') ?? '';
+  if (contentType.includes('application/json')) {
+    scheda = await req.json();
+  } else {
+    // form submit nativo (iOS Safari)
+    const formData = await req.formData();
+    scheda = JSON.parse(formData.get('scheda') as string);
+  }
+
   const pdfBytes = await generaPDF(scheda);
   const buffer = Buffer.from(pdfBytes);
 

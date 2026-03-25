@@ -1,6 +1,8 @@
 import { PDFDocument, rgb, StandardFonts, PDFPage, PDFFont } from 'pdf-lib';
 import { SchedaCCA } from './types';
 import { AROMI_LIST, FORZA_OPZIONI, GIUDIZIO_OPZIONI } from './schema';
+import fs from 'fs';
+import path from 'path';
 
 const GOLD = rgb(0.788, 0.659, 0.298);
 const BLACK = rgb(0, 0, 0);
@@ -41,6 +43,18 @@ export async function generaPDF(scheda: SchedaCCA): Promise<Uint8Array> {
   const font = await pdfDoc.embedFont(StandardFonts.TimesRoman);
   const fontBold = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
 
+  // Loghi
+  const logoCCABytes = fs.readFileSync(path.join(process.cwd(), 'public', 'logoCCA.png'));
+  const logoCivithabanaBytes = fs.readFileSync(path.join(process.cwd(), 'public', 'logoCivithabana.png'));
+  const logoCCA = await pdfDoc.embedPng(logoCCABytes);
+  const logoCivithabana = await pdfDoc.embedPng(logoCivithabanaBytes);
+
+  const HEADER_H = 58;
+  const LOGO_H = 38;
+  const LOGO_Y_OFFSET = (HEADER_H - LOGO_H) / 2;
+  const ccaW = LOGO_H * (logoCCA.width / logoCCA.height);
+  const civitW = LOGO_H * (logoCivithabana.width / logoCivithabana.height);
+
   // ─── PAGINA 1 ───────────────────────────────────────────────────────────────
   const p1 = pdfDoc.addPage([595, 842]);
   const W = 595;
@@ -48,15 +62,23 @@ export async function generaPDF(scheda: SchedaCCA): Promise<Uint8Array> {
   const margin = 36;
 
   // Header
-  p1.drawRectangle({ x: 0, y: 780, width: W, height: 62, color: DARK });
-  p1.drawText('SCHEDA DI DEGUSTAZIONE DEL SIGARO', {
-    x: margin, y: 815, size: 14, font: fontBold, color: GOLD
+  const headerY = 842 - HEADER_H;
+  p1.drawRectangle({ x: 0, y: headerY, width: W, height: HEADER_H, color: DARK });
+  p1.drawImage(logoCCA, { x: margin, y: headerY + LOGO_Y_OFFSET, width: ccaW, height: LOGO_H });
+  p1.drawImage(logoCivithabana, { x: W - margin - civitW, y: headerY + LOGO_Y_OFFSET, width: civitW, height: LOGO_H });
+  const titleText1 = 'SCHEDA DI DEGUSTAZIONE';
+  const subtitleText1 = 'Cigar Club Association  —  CCA';
+  const midX1 = (margin + ccaW + 6 + W - margin - civitW - 6) / 2;
+  p1.drawText(titleText1, {
+    x: midX1 - fontBold.widthOfTextAtSize(titleText1, 13) / 2,
+    y: headerY + HEADER_H / 2 + 3, size: 13, font: fontBold, color: GOLD
   });
-  p1.drawText('Cigar Club Association  —  CCA', {
-    x: margin, y: 796, size: 9, font, color: LIGHT_GRAY
+  p1.drawText(subtitleText1, {
+    x: midX1 - font.widthOfTextAtSize(subtitleText1, 8) / 2,
+    y: headerY + HEADER_H / 2 - 11, size: 8, font, color: LIGHT_GRAY
   });
 
-  let y = 765;
+  let y = headerY - 15;
 
   // ── Dati generali
   y = sectionTitle(ctx, margin, y, 'Dati Generali');
@@ -106,12 +128,11 @@ export async function generaPDF(scheda: SchedaCCA): Promise<Uint8Array> {
   y = sectionTitle(ctx, margin, y, 'Analisi a Crudo');
   const ac = scheda.analisiCrudo;
 
+  const COL_W = 88; // larghezza fissa colonna → allineamento uniforme tra righe
   function radioRow(label: string, opzioni: string[], valore: string | null): void {
     p1.drawText(label + ':', { x: margin, y, size: 7, font, color: GRAY });
-    let rx = margin + 80;
-    opzioni.forEach((opt) => {
-      checkbox(ctx, rx, y, opt, valore === opt, 7);
-      rx += Math.max(opt.length * 5 + 16, 60);
+    opzioni.forEach((opt, i) => {
+      checkbox(ctx, margin + 80 + i * COL_W, y, opt, valore === opt, 7);
     });
     y -= 12;
   }
@@ -230,10 +251,18 @@ export async function generaPDF(scheda: SchedaCCA): Promise<Uint8Array> {
   const p2 = pdfDoc.addPage([595, 842]);
   const ctx2: DrawCtx = { page: p2, font, fontBold, width: W };
 
-  p2.drawRectangle({ x: 0, y: 820, width: W, height: 22, color: DARK });
-  p2.drawText('SCHEDA CCA  pagina 2', { x: margin, y: 826, size: 8, font, color: LIGHT_GRAY });
+  const header2Y = 842 - HEADER_H;
+  p2.drawRectangle({ x: 0, y: header2Y, width: W, height: HEADER_H, color: DARK });
+  p2.drawImage(logoCCA, { x: margin, y: header2Y + LOGO_Y_OFFSET, width: ccaW, height: LOGO_H });
+  p2.drawImage(logoCivithabana, { x: W - margin - civitW, y: header2Y + LOGO_Y_OFFSET, width: civitW, height: LOGO_H });
+  const subtitleText2 = 'SCHEDA DI DEGUSTAZIONE  —  pagina 2';
+  const midX2 = (margin + ccaW + 6 + W - margin - civitW - 6) / 2;
+  p2.drawText(subtitleText2, {
+    x: midX2 - font.widthOfTextAtSize(subtitleText2, 9) / 2,
+    y: header2Y + HEADER_H / 2 - 4, size: 9, font, color: LIGHT_GRAY
+  });
 
-  let y2 = 805;
+  let y2 = header2Y - 15;
 
   // ── Descrizione fasi
   y2 = sectionTitle(ctx2, margin, y2, 'Descrizione Sintetica delle Fasi');
@@ -258,10 +287,8 @@ export async function generaPDF(scheda: SchedaCCA): Promise<Uint8Array> {
 
   function radioRow2(label: string, opzioni: string[], valore: string | null): void {
     p2.drawText(label + ':', { x: margin, y: y2, size: 7, font, color: GRAY });
-    let rx = margin + 80;
-    opzioni.forEach((opt) => {
-      checkbox(ctx2, rx, y2, opt, valore === opt, 7);
-      rx += Math.max(opt.length * 5 + 16, 70);
+    opzioni.forEach((opt, i) => {
+      checkbox(ctx2, margin + 80 + i * COL_W, y2, opt, valore === opt, 7);
     });
     y2 -= 12;
   }
