@@ -28,10 +28,10 @@ export default function TabellaForza({ forza, onChange }: TabellaForzaProps) {
                   key={opzione}
                   type="button"
                   onClick={() => onChange(fase, sel ? null : opzione)}
-                  className={`px-4 py-3 min-h-[44px] rounded border text-sm transition-all cursor-pointer touch-manipulation flex-1
+                  className={`px-4 py-3 min-h-[44px] rounded border text-base transition-all cursor-pointer touch-manipulation flex-1
                     ${sel
                       ? 'border-gold bg-gold/15 text-gold-light'
-                      : 'border-border bg-surface text-text-dim'
+                      : 'border-border bg-surface text-text'
                     }`}
                   style={{ fontFamily: 'var(--font-body)' }}
                 >

@@ -37,10 +37,10 @@ export default function TabellaAromi({ aromi, onChange }: TabellaAromiProps) {
                   key={aroma}
                   type="button"
                   onClick={() => toggleAroma(fase, aroma)}
-                  className={`px-4 py-3 min-h-[44px] rounded border text-sm transition-all cursor-pointer touch-manipulation
+                  className={`px-4 py-3 min-h-[44px] rounded border text-base transition-all cursor-pointer touch-manipulation
                     ${sel
                       ? 'border-gold bg-gold/15 text-gold-light'
-                      : 'border-border bg-surface text-text-dim'
+                      : 'border-border bg-surface text-text'
                     }`}
                   style={{ fontFamily: 'var(--font-body)' }}
                 >

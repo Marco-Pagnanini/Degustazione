@@ -30,7 +30,7 @@ export default function CampoRadio({
     <div className={`flex flex-col gap-2 ${className}`}>
       {label && (
         <span
-          className="text-xs text-text-dim tracking-widest uppercase"
+          className="text-sm text-text tracking-widest uppercase"
           style={{ fontFamily: 'var(--font-mono)' }}
         >
           {label}
@@ -48,7 +48,7 @@ export default function CampoRadio({
               className={`px-4 py-3 min-h-[44px] rounded border text-base transition-all cursor-pointer touch-manipulation
                 ${selezionata
                   ? 'border-gold bg-gold/10 text-gold-light'
-                  : 'border-border bg-surface text-text-dim hover:border-gold/50 hover:text-text'
+                  : 'border-border bg-surface text-text hover:border-gold/50'
                 }`}
               style={{ fontFamily: 'var(--font-body)' }}
             >

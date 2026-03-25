@@ -36,7 +36,7 @@ export default function TabellaSapori({ sapori, onChange }: TabellaSaporiProps) 
               return (
                 <div key={sapore} className="flex items-center px-4 py-2 gap-3">
                   <span
-                    className="text-sm text-text-dim capitalize w-20 shrink-0"
+                    className="text-base text-text capitalize w-20 shrink-0"
                     style={{ fontFamily: 'var(--font-body)' }}
                   >
                     {sapore}
@@ -53,7 +53,7 @@ export default function TabellaSapori({ sapori, onChange }: TabellaSaporiProps) 
                           className={`flex-1 min-h-[44px] rounded border text-sm font-medium transition-all cursor-pointer touch-manipulation
                             ${sel
                               ? 'border-gold bg-gold/15 text-gold-light'
-                              : 'border-border bg-surface text-text-dim'
+                              : 'border-border bg-surface text-text'
                             }`}
                           style={{ fontFamily: 'var(--font-mono)' }}
                         >
@@ -68,7 +68,7 @@ export default function TabellaSapori({ sapori, onChange }: TabellaSaporiProps) 
           </div>
         </div>
       ))}
-      <p className="text-text-dim text-xs italic px-1" style={{ fontFamily: 'var(--font-body)' }}>
+      <p className="text-text-dim text-sm italic px-1" style={{ fontFamily: 'var(--font-body)' }}>
         1 = lieve &nbsp;·&nbsp; 2 = presente &nbsp;·&nbsp; 3 = importante
       </p>
     </div>

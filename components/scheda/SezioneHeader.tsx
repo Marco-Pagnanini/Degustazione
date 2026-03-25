@@ -19,7 +19,7 @@ export default function SezioneHeader({ titolo, sottotitolo }: SezioneHeaderProp
       </h2>
       {sottotitolo && (
         <p
-          className="text-text-dim text-sm text-center mt-1 tracking-wide"
+          className="text-text text-base text-center mt-1 tracking-wide"
           style={{ fontFamily: 'var(--font-mono)' }}
         >
           {sottotitolo}

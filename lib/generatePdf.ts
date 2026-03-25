@@ -199,7 +199,7 @@ export async function generaPDF(scheda: SchedaCCA): Promise<Uint8Array> {
   const arColW = Math.floor((W - margin * 2 - 60) / AROMI_LIST.length);
 
   AROMI_LIST.forEach((a, i) => {
-    const abbr = a.substring(0, 4);
+    const abbr = a.substring(0, 6);
     p1.drawText(abbr, { x: margin + 60 + i * arColW, y, size: 6, font, color: GRAY });
   });
   y -= 11;

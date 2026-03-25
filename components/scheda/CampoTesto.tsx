@@ -20,7 +20,7 @@ export default function CampoTesto({
   return (
     <div className={`flex flex-col gap-1 ${className}`}>
       <label
-        className="text-xs text-text-dim tracking-widest uppercase"
+        className="text-sm text-text tracking-widest uppercase"
         style={{ fontFamily: 'var(--font-mono)' }}
       >
         {label}
@@ -30,7 +30,7 @@ export default function CampoTesto({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="bg-surface border border-border rounded px-3 py-2 text-text text-sm outline-none
+        className="bg-surface border border-border rounded px-3 py-2 text-text text-base outline-none
                    focus:border-gold transition-colors placeholder:text-text-dim"
         style={{ fontFamily: 'var(--font-body)' }}
       />
