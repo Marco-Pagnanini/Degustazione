@@ -10,6 +10,7 @@ import SezioneHeader from './SezioneHeader';
 import CampoTesto from './CampoTesto';
 import CampoTextarea from './CampoTextarea';
 import CampoRadio from './CampoRadio';
+import CampoColoreCapa from './CampoColoreCapa';
 import TabellaSapori from './TabellaSapori';
 import TabellaAromi from './TabellaAromi';
 import TabellaForza from './TabellaForza';
@@ -200,11 +201,18 @@ export default function SchedaForm() {
         </section>
 
         {/* ── ANALISI A CRUDO ── */}
-        <section className="bg-surface rounded-lg border border-border p-6 space-y-5">
+        <section
+          className="relative rounded-lg border border-border p-6 space-y-5 overflow-hidden"
+          style={{
+            backgroundImage: 'url(/back.jpeg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
+          <div className="absolute inset-0 bg-black/70" />
+          <div className="relative z-10 space-y-5">
           <SezioneHeader titolo="Analisi a Crudo" />
-          <CampoRadio
-            label="Colore della Capa"
-            opzioni={['Claro', 'Col. Claro', 'Colorado', 'Col. Maduro', 'Maduro']}
+          <CampoColoreCapa
             valore={scheda.analisiCrudo.coloreCapa}
             onChange={(v) => aggAnalisiCrudo('coloreCapa', v)}
           />
@@ -263,6 +271,7 @@ export default function SchedaForm() {
             placeholder="Descrivi i sentori a crudo..."
             rows={2}
           />
+          </div>
         </section>
 
         {/* ── ANALISI MECCANICA ── */}

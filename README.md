@@ -1,37 +1,128 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Degustazione - Scheda di Valutazione Sigari CCA
 
-## Getting Started
+Applicazione web per la creazione di schede di degustazione sigari secondo gli standard del **Cigar Club Association (CCA)**.
 
-First, run the development server:
+## Descrizione
+
+Degustazione è un'applicazione form-based che permette ai catadores (degustatori) di documentare valutazioni dettagliate dei sigari con criteri standardizzati ed esportare i risultati in formato PDF.
+
+## Funzionalità
+
+- **Form multi-sezione** per la valutazione completa del sigaro
+- **Analisi a crudo** - colore capa, tonalità, luminosità, texture, uniformità
+- **Analisi meccanica** - tiraggio, combustione, cenere
+- **Analisi gustativa** - tabella sapori su 3 fasi (ingresso, centro, finale)
+- **Aromi** - 13 categorie di aromi identificabili per fase
+- **Forza** - intensità percepita nelle 3 fasi
+- **Giudizio finale** - sistema di medaglie e riconoscimenti speciali
+- **Barra di progresso** in tempo reale
+- **Esportazione PDF** professionale con loghi CCA
+
+## Tech Stack
+
+- **Next.js 16** - Framework React con App Router
+- **React 19** - Libreria UI
+- **TypeScript 5** - Tipizzazione statica
+- **Tailwind CSS 4** - Styling utility-first
+- **pdf-lib** - Generazione PDF lato server
+
+## Installazione
 
 ```bash
+# Clona il repository
+git clone <repo-url>
+cd degustazione
+
+# Installa le dipendenze
+npm install
+
+# Avvia il server di sviluppo
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+L'applicazione sarà disponibile su `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Comandi
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Comando | Descrizione |
+|---------|-------------|
+| `npm run dev` | Avvia il server di sviluppo |
+| `npm run build` | Build di produzione |
+| `npm start` | Avvia il server di produzione |
+| `npm run lint` | Esegue ESLint |
 
-## Learn More
+## Struttura Progetto
 
-To learn more about Next.js, take a look at the following resources:
+```
+degustazione/
+├── app/
+│   ├── page.tsx              # Redirect a /scheda
+│   ├── layout.tsx            # Layout con font e metadata
+│   ├── globals.css           # Stili globali e tema
+│   ├── scheda/
+│   │   └── page.tsx          # Pagina principale del form
+│   └── api/
+│       └── genera-pdf/
+│           └── route.ts      # API per generazione PDF
+├── components/
+│   └── scheda/               # Componenti del form
+│       ├── SchedaForm.tsx    # Container principale
+│       ├── ProgressBar.tsx   # Indicatore progresso
+│       ├── CampoTesto.tsx    # Input testo
+│       ├── CampoTextarea.tsx # Textarea
+│       ├── CampoRadio.tsx    # Radio buttons
+│       ├── CampoColoreCapa.tsx # Selettore colore capa
+│       ├── TabellaSapori.tsx # Tabella intensità sapori
+│       ├── TabellaAromi.tsx  # Tabella selezione aromi
+│       ├── TabellaForza.tsx  # Tabella forza per fase
+│       ├── GiudizioFinale.tsx # Medaglie e riconoscimenti
+│       └── SezioneHeader.tsx # Titoli sezione
+├── lib/
+│   ├── types.ts              # Definizioni TypeScript
+│   ├── schema.ts             # Schema form e costanti
+│   └── generatePdf.ts        # Logica generazione PDF
+└── public/
+    ├── logoCCA.png           # Logo Cigar Club Association
+    └── logoCivithabana.png   # Logo CivitHabana
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Sezioni della Scheda
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Dati Generali** - Data, catador, paese, marca, vitola, prezzo
+2. **Analisi a Crudo** - Valutazione visiva e tattile del sigaro
+3. **Analisi Meccanica** - Tiraggio, combustione, cenere
+4. **Analisi Gustativa** - 7 sapori con 3 livelli di intensità
+5. **Aromi** - Identificazione aromi per fase di fumata
+6. **Forza** - Intensità percepita (leggera → forte)
+7. **Descrizione Fasi** - Note libere per ogni fase
+8. **Analisi Organolettica** - Equilibrio, complessità, evoluzione
+9. **Considerazioni Finali** - Durata, abbinamenti, rapporto qualità/prezzo
+10. **Giudizio Finale** - Medaglia e commento finale
 
-## Deploy on Vercel
+## Sistema di Valutazione
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Medaglia | Descrizione |
+|----------|-------------|
+| Scadente | ⭐ |
+| Sufficiente | ⭐⭐ |
+| Buono | ⭐⭐⭐ |
+| Distinto | ⭐⭐⭐⭐ |
+| Ottimo | ⭐⭐⭐⭐⭐ |
+| **Coppa** | Eccellenza assoluta |
+| **OK!** | Esperienza emozionale |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# Degustazione
+## Design
+
+Tema dark luxury ispirato all'estetica dei club del sigaro:
+
+- **Background**: Nero-marrone profondo (`#0e0b07`)
+- **Accenti**: Oro (`#c9a84c`)
+- **Font**: Playfair Display, Crimson Pro, DM Mono
+
+## Licenza
+
+Progetto portfolio - Tutti i diritti riservati.
+
+---
+
+Sviluppato per il **Cigar Club Association**
